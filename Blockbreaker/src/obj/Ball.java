@@ -41,6 +41,7 @@ public class Ball extends Objects {
             if(bounds.intersects(i.bounds)){
                 if(i.ismoving){
                     int dirvel=i.dir.equals("left")?i.xspeed:-i.xspeed;
+                    dirvel/=2;
                     xspeed=-(xspeed)+(dirvel);
                     yspeed=-yspeed;
                 }else{
