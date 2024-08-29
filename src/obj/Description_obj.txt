@@ -1,1 +1,0 @@
-this is the file with all the nessecary objects for the game's functioning
