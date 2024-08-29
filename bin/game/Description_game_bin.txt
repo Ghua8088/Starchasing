@@ -1,1 +1,0 @@
-This file has the compiled files of game package.
