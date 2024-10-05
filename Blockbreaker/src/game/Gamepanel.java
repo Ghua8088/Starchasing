@@ -1,6 +1,8 @@
 package game;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.Random;
+import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import obj.*;
@@ -13,14 +15,22 @@ public class Gamepanel extends JPanel implements Runnable{
     final int screenwidth= maxscreencol*tilesize;
     final int screenheight= maxscreenrow*tilesize;
     public Thread gameThread;
+    public BufferedImage bg;
     KeyHandler Keyh= new KeyHandler(gameThread);
     public Bar p1=new Bar(this,Keyh);
     public Ball p2=new Ball(this);
-    public int nom=12;
+    public int nom=50;
     public Brick p3[]=new Brick[nom];
     public Objects all[]=new Objects[nom+1];
     public boolean ispaused=false;
     Random rand = new Random();
+    public void getbg(){
+        try {
+            bg=ImageIO.read(getClass().getResourceAsStream("space.gif"));
+        } catch (Exception e) {
+            System.err.println("Error loading ball image");
+        }
+    }
     public final void initializeBricks(){
         int nextbrickx;
         int nextbricky;
@@ -86,8 +96,10 @@ public class Gamepanel extends JPanel implements Runnable{
     }
     public void update(){
         p1.update();
+        if(!(p1.dir.equals("unmoved"))){
+            p2.update();
+        }
         
-        p2.update();
         if(p2.y >= 718){
             ispaused=true;
             int choice = JOptionPane.showConfirmDialog(null, "Game Over!\n Your score:"+p2.count+" \nTry again?", "Game Over", JOptionPane.YES_NO_OPTION);
@@ -129,6 +141,7 @@ public class Gamepanel extends JPanel implements Runnable{
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         Graphics2D g2= (Graphics2D)g;
+        g2.drawImage(bg,0,0,screenheight,screenwidth,null);
         for(Brick i:p3){
             if(i!=null  && i.isvisible){
                 i.draw(g2);
@@ -145,5 +158,6 @@ public class Gamepanel extends JPanel implements Runnable{
         this.setDoubleBuffered(true);
         this.addKeyListener(Keyh);
         this.setFocusable(true);
+        this.getbg();
     }
 }

@@ -1,13 +1,17 @@
 package obj;
 import game.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
 public class Ball extends Objects {
     Gamepanel gp;
     public int count=0;
+    public BufferedImage image;
     public Ball (Gamepanel gp){
         this.gp = gp;
         setDefault();
         bounds= new Rectangle(x,y,Objheight,Objwidth);
+        getBallimage();
     }
     final public void setDefault(){
         x=300;
@@ -16,6 +20,13 @@ public class Ball extends Objects {
         yspeed=1;
         this.Objwidth=gp.tilesize/2;
         this.Objheight=gp.tilesize/2;
+    }
+    public void getBallimage(){
+        try {
+            image=ImageIO.read(getClass().getResourceAsStream("Ball.png"));
+        } catch (Exception e) {
+            System.err.println("Error loading ball image");
+        }
     }
     public void update(){
         bounce(gp.p1);
@@ -49,14 +60,13 @@ public class Ball extends Objects {
                     if (intersection.width >= intersection.height) {
                         bounce(1,-1);
                     }else {
-                        bounce(-1,1);
+                        bounce(-1,1+(count/2)/100);
                     }
                 }
         }
     }
     public void draw(Graphics g2){
-        g2.setColor(Color.RED);
-        g2.fillRoundRect(this.x,this.y,gp.tilesize/2, gp.tilesize/2,48,48);
+        g2.drawImage(image,x,y,Objheight,Objwidth,null);
         g2.setColor(Color.WHITE);
         g2.setFont(new Font("Arial", Font.BOLD, 24)); 
         g2.drawString("Score: " + count, 50, 50);
